@@ -5,18 +5,79 @@
 
 using namespace std;
 
+// Enum for colors
 enum Colors {black, red, green, blue};
 
-// Precursor to classes
-struct product
-{
+// Struct definition for product
+struct product {
     int weight;
     double value;
     Colors color;
 };
 
-int main(int argc, char *argv[])
-{
+// Test functions
+void test(){
+    qInfo() << "Hello From test Function";
+}
+
+void test2(){
+    qInfo() << "Hello from test2 Function";
+    test();
+}
+
+// Function overloading examples
+void test(QString name) { qInfo() << "Name:" << name; }
+void test(int age) { qInfo() << "Age:" << age; }
+void test(bool isActive){
+    if (isActive) {
+        qInfo() << "Yes it is active";
+    } else {
+        qInfo() << "No it is not active";
+    }
+}
+
+// Function for flow control in functions
+int calc(int offset, int age) {
+    if (offset == 0) {
+        qFatal("offset can't be zero!");
+    } else {
+        if (age <= 0 || age > 120) {
+            qFatal("Invalid Age!");
+        } else {
+            int x = offset * age;
+            return x;
+        }
+    }
+    return -1; // To handle cases where above conditions are not met
+}
+
+// Helper functions using calc
+int catYears(int age) { return calc(9, age); }
+int dogYears(int age) { return calc(7, age); }
+
+// Passing by Value and Reference example
+void testVal(int x, int &y) {
+    x = x * 10;
+    y = y * 100;
+    qInfo() << "test x value:" << x;
+    qInfo() << "test y value:" << y;
+}
+
+// Struct with functions example
+struct laptop {
+    int weight;
+
+    double asKg() { return weight * 0.453592; }
+};
+
+// Function returning pointer
+QObject* get_ptr(QString name){
+    QObject *o = new QObject(); // on heap we will manage this!
+    o->setObjectName(name);
+    return o; // Will Not be Deleted
+}
+
+int main(int argc, char *argv[]) {
     QCoreApplication a(argc, argv);
 
     qInfo() << "*****************************";
@@ -60,7 +121,7 @@ int main(int argc, char *argv[])
     qInfo() << "*****************************";
 
     // Structs
-    product laptop;
+    struct product laptop;
     qInfo() << "Size of laptop struct:" << sizeof(laptop);
 
     laptop.color = Colors::green;
@@ -129,15 +190,15 @@ int main(int argc, char *argv[])
     qInfo() << "*****************************";
 
     // Comparison Operators
-    int x = 10;
-    int y = 15;
+    int x1 = 10;
+    int y1 = 15;
 
-    qInfo() << "x == y:" << (x == y);
-    qInfo() << "x != y:" << (x != y);
-    qInfo() << "x <= y:" << (x <= y);
-    qInfo() << "x >= y:" << (x >= y);
-    qInfo() << "x < y:" << (x < y);
-    qInfo() << "x > y:" << (x > y);
+    qInfo() << "x1 == y1:" << (x1 == y1);
+    qInfo() << "x1 != y1:" << (x1 != y1);
+    qInfo() << "x1 <= y1:" << (x1 <= y1);
+    qInfo() << "x1 >= y1:" << (x1 >= y1);
+    qInfo() << "x1 < y1:" << (x1 < y1);
+    qInfo() << "x1 > y1:" << (x1 > y1);
 
     qInfo() << "*****************************";
 
@@ -147,7 +208,7 @@ int main(int argc, char *argv[])
     qInfo() << "i between 5 and 20:" << (i < 20 && i > 5);
     qInfo() << "i greater than 20 or greater than 8:" << (i < 20 || i > 8);
     qInfo() << "i is 10:" << !(i != 10);
-    qInfo() << "Complex condition:" << ((i > 11 && i < 20) || x == 10);
+    qInfo() << "Complex condition:" << ((i > 11 && i < 20) || x1 == 10);
 
     qInfo() << "*****************************";
 
@@ -258,7 +319,7 @@ int main(int argc, char *argv[])
 
     qInfo();
 
-    //Do While Loop
+    // Do While Loop
     int doStart = 1000;
     do {
         qInfo() << "Do =" << doStart;
@@ -271,7 +332,7 @@ int main(int argc, char *argv[])
     cin >> userMax;
 
     if(userMax <= 0){
-        qFatal("invaid number for loop");
+        qFatal("invalid number for loop");
     } else {
         for (int var = 0; var <= userMax; ++var) {
             qInfo() << "your number= " << var;
@@ -286,6 +347,61 @@ int main(int argc, char *argv[])
     }
 
     qInfo() << "*****************************";
+
+    // Functions
+    test2();
+
+    qInfo("********************");
+
+    int yourAge = 0;
+    qInfo() << "Enter your age:";
+    cin >> yourAge;
+
+    int funcValue = calc(2, yourAge);
+    qInfo() << "Double of age:" << funcValue;
+
+    qInfo("********************");
+
+    // Cat year
+    qInfo() << "your age according cat years is" << catYears(yourAge);
+
+    qInfo("********************");
+
+    // Dog year
+    qInfo() << "your age according dog years is" << dogYears(yourAge);
+
+    qInfo("********************");
+
+    // We can call one of the test() functions with overloading.
+    test();   // first test function
+    test(24); // int function
+    test(QString("hasan")); // QString function
+    test(true); // bool function
+
+    qInfo("********************");
+
+    // Passing by Value and Reference
+    int x2 = 5;
+    int y2 = 10;
+
+    qInfo() << "Main x2:" << x2;  // 5
+    qInfo() << "Main y2:" << y2; // 10
+    qInfo("********************");
+    testVal(x2, y2);
+    qInfo("********************");
+    qInfo() << "Main x2:" << x2; // 5
+    qInfo() << "Main y2:" << y2; // 1000
+
+    // Structs with Functions
+    struct laptop lenovo;
+    lenovo.weight = 5;
+    qInfo() << "Pounds:" << lenovo.weight;
+    qInfo() << "Kilograms:" << lenovo.asKg();
+
+    // QObject o1 = get_object("ByValue");
+    // QObject o2 = get_ref("ByReference");
+    QObject *o3 = get_ptr("ByPointer");
+    qInfo() << o3->objectName();
 
     return a.exec();
 }
